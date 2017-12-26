@@ -1,0 +1,101 @@
+<% include include/main-header %>
+<link href="css/animate.min.css" rel="stylesheet">
+</head>
+
+<body class="body-Login-back" id="login-pg">
+    <div class="container">
+    <div class="row  animated fadeInDown">
+    <div class="col-md-4 col-md-offset-4 text-center logo-margin ">
+    <div class=“logo-margin”><i class="fa fa-book"></i> Library System</div>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+    <div class="login-panel panel panel-default  margin-btm5 ">                  
+    <div class="panel-heading panel-black-bg">
+    <h3 class="panel-title">Register</h3>
+    </div>
+    <div class="panel-body">
+        				<form class="form-horizontal" id="loginform" action="/save_registration" method="POST">
+                            <fieldset>
+                            	<input type="hidden" class="form-control" id="data" name="data" value="">
+                            	<% if (typeof queryStr.error_msg !== 'undefined' && queryStr.error_msg !== null) { %>
+									<div class="alert alert-danger"><%= queryStr.error_msg %>
+            						</div>
+            						<% }
+           							if(typeof queryStr.success_msg !== 'undefined' && queryStr.success_msg !== null) {	%>
+										<div class="alert alert-success">
+             								<%= queryStr.success_msg %>
+            							</div>
+            						<%	}	%>
+            					<div class="form-group" style="margin:10px 0px;">
+                                    <input class="form-control" placeholder="E-mail" name="email" type="text" required autofocus>
+                                </div>
+                                <div class="form-group" style="margin:10px 0px;">
+                                    <input class="form-control" placeholder="Username" name="username" type="text">
+                                </div>
+            					<div class="form-group" style="margin:10px 0px;">
+                                    <input class="form-control" placeholder="First Name" name="firstname" type="text" required>
+                                </div>
+                                <div class="form-group" style="margin:10px 0px;">
+                                    <input class="form-control" placeholder="Last Name" name="lastname" type="text" required>
+                                </div>
+                                
+                                <div class="form-group" style="margin:10px 0px;">
+                                    <input class="form-control" placeholder="Password" name="password" type="password" required value="">
+                                </div>
+                                
+                                <button  class="btn btn-danger btn-color" style="WIDTH: 100%; font-size:17px; line-height: 27px;" type="submit" style="padding-top: 3px;">Submit</button>
+                                <p class="text-right"><small><a href="/sign-in"><em>Sign in?</em></a></small></p>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+     <!-- Core Scripts - Include with every page -->
+    <% include include/scripts-footer %>
+	<script src="js/jquery.validate.js"></script>
+	<script language="javascript">
+	$(function () {
+		// validate form on keyup and submit
+		$("#loginform").validate({
+			ignore: "",
+			onkeyup: false,
+			errorClass: 'error',
+			validClass: 'valid',
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				$(element).closest('div').append(error);
+			},
+			onfocusout: false,
+			invalidHandler: function(form, validator) {
+				var errors = validator.numberOfInvalids();
+				if (errors) {                    
+					validator.errorList[0].element.focus();
+				}
+			},
+			rules: {
+				email: { required: true },
+				password: { required: true	}
+			},
+			submitHandler: function(form) {
+				var x = $(form).serializeArray();
+				var outputObj = new Object();
+    			$.each(x, function(i, field){
+    				if(field.name!="data"){
+    					$("input[name="+field.name+"]").removeAttr('name');
+        				outputObj[field.name]   = field.value;
+     				}
+    			});
+    			$("#data").val(JSON.stringify(outputObj));
+				form.submit();
+ 			}
+		});			
+		
+	});
+	</script>
+</body>
+</html>
+
